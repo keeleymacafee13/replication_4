@@ -30,11 +30,10 @@ use.letters = c('a','b','c','d','e','f','skip','g','h')
 
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
-##create_tables_and_figures_only.r
+##Figure 1
 
-#cat('creating output \n')
+# Master graphic parameters for graphics 
 
-###master graphic parameters for graphics 
 ylims = c(-.35,.1)
 ylims.2 = c(-.45,.1)
 xlims = c(.5,11)
@@ -54,26 +53,22 @@ bottom.text.adj = c(-.15,-.85)
 point.size = 2
 line.offset = .0175
 
-```
 
 
 
-```{r echo=FALSE, message=FALSE, warning=FALSE}
-#LOOK BACK AT THIS
-##cycle through each line of data, each of which are groups defined by diferent namepcts
-for(i in 1:nrow(wtreat)){ ##turning into matrices helps below with segment function
-	use.wtreat = as.matrix(wtreat[i,])
-	use.wlower = as.matrix(wtreat.lower[i,])
-	use.wupper = as.matrix(wtreat.upper[i,])
-	use.Nwtreat = as.matrix(Nwtreat[i,])
+# Cycle through each line of data, each of which are groups defined by diferent namepcts
+	use.wtreat = as.matrix(wtreat[7,])
+	use.wlower = as.matrix(wtreat.lower[7,])
+	use.wupper = as.matrix(wtreat.upper[7,])
+	use.Nwtreat = as.matrix(Nwtreat[7,])
 	
-	use.btreat = as.matrix(btreat[i,])
-	use.blower = as.matrix(btreat.lower[i,])
-	use.bupper = as.matrix(btreat.upper[i,])
-	use.Nbtreat = as.matrix(Nbtreat[i,])
+	use.btreat = as.matrix(btreat[7,])
+	use.blower = as.matrix(btreat.lower[7,])
+	use.bupper = as.matrix(btreat.upper[7,])
+	use.Nbtreat = as.matrix(Nbtreat[7,])
 	
 
-##name graphs
+# Name graphs
 	par(las = 1)
 	par(mar = c(5.1, 4.1, .5, .5))
 	plot(xs, use.wtreat,
@@ -86,20 +81,27 @@ for(i in 1:nrow(wtreat)){ ##turning into matrices helps below with segment funct
 		yaxt = 'n.csv')
 	abline(h = 0, lty = 2)
 
-	###draw lines first because I want them to be covered by points
-	####create spaces in lines using the offset (this allows the N to be displayed with the text() function)
-	##black lines are offset to the left, white lines to the right	
-	segments(x0= xs[1:2]+offsets, x1 = xs[1:2]+offsets, ##only do it for low N blacks because otherwise lines look funny
+# Draw lines first because I want them to be covered by points
+# Create spaces in lines using the offset (this allows the N to be displayed with the text() function)
+# Black lines are offset to the left, white lines to the right	
+	
+	segments(x0= xs[1:2]+offsets, x1 = xs[1:2]+offsets, 
+	         
+# Only do it for low N blacks because otherwise lines look funny
+
 		y0 = use.btreat[,1:2], y1 =	use.blower[,1:2])
 	segments(x0= xs[1:2]+offsets, x1 = xs[1:2]+offsets,
 		y0 = use.btreat[,1:2] + line.offset, 	y1 =	use.bupper[,1:2])
-  ##now the others
+	
+# Now the others
+	
 	segments(x0= xs[3:10]+offsets, x1 = xs[3:10]+offsets,
 		y0 = use.blower[,3:10], 	y1 =	use.bupper[,3:10])
-		
-	segments(x0= xs-offsets, x1 = xs-offsets, ##bottomlines
+# Bottom lines
+	segments(x0= xs-offsets, x1 = xs-offsets, 
 		y0 = use.wtreat - line.offset, 	y1 =	use.wlower)
-	segments(x0= xs-offsets, x1 = xs-offsets, ##toplines
+# Top lines
+	segments(x0= xs-offsets, x1 = xs-offsets, 
 		y0 = use.wtreat, 	y1 =	use.wupper)
 
   
@@ -137,17 +139,14 @@ for(i in 1:nrow(wtreat)){ ##turning into matrices helps below with segment funct
 		cex.axis = cex.axis
 		)	
 
-	#dev.off()
-	}
+
 
 ```
 
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
-###########################################
-###matched groups################
 ###Figures 2 and 3 and Appendix Figure A3-A12
-###################################
+
 
 ##this cycles thorugh a bunch of dataframes, each of which is needed for a different graph
 for(figure in c('white.basic.main','white.demo.main','white.demo.property','white.demo.localrace','blackmain','blackcensus')){
@@ -261,7 +260,6 @@ for(figure in c('white.basic.main','white.demo.main','white.demo.property','whit
 					cex.axis = cex.axis
 					)	
 			
-			#dev.off()
 		}
 	}	
 ```
@@ -270,10 +268,8 @@ for(figure in c('white.basic.main','white.demo.main','white.demo.property','whit
 
 
 ```{r fig4, echo=FALSE, message=FALSE, warning=FALSE}
-###########################################
-###predicted effects graphs################
+###predicted effects graphs
 ###Figure 4
-###################################
 
 distdat =  read.csv('dataverse_files/predicted.results.distance.vary.context.csv')
 areadat = read.csv('dataverse_files/predicted.results.area.vary.context.csv')
