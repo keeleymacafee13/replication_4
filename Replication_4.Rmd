@@ -3,7 +3,7 @@ title: 'Replication 4: "What the Demolition of Public Housing Teaches Us about t
   Impact of Racial Threat on Political Behavior"'
 author: "Keeley MacAfee"
 date: "4/1/2019"
-output: html_document
+output: pdf_document
 ---
 
 ```{r setup, include=FALSE}
@@ -58,9 +58,6 @@ top.text.adj = c(1.3,1.3) ##offsets on labels to reduce crowding
 bottom.text.adj = c(-.15,-.85)
 point.size = 2
 line.offset = .0175
-
-
-
 
 # Cycle through each line of data, each of which are groups defined by diferent namepcts
 	use.wtreat = as.matrix(wtreat[7,])
@@ -123,8 +120,7 @@ line.offset = .0175
 	     paste('(',use.Nwtreat,')',sep = ''),
 	     cex = cex.N,
 	     #adj = top.text.adj
-	     pos = 1
-	    )
+	     pos = 1)
 	
 	points(xs+offsets, use.btreat,
 	       pch = 16,
@@ -133,47 +129,32 @@ line.offset = .0175
 	     paste('(',use.Nbtreat,')',sep = ''),
 	     cex = cex.N,
 	     #adj = bottom.text.adj
-	     pos = 3
-	    )
+	     pos = 3)
 	
 	axis(side = 1,
 		at = xs,
 		label = seq(100,1000,100),
-		cex.axis = cex.axis
-		)
+		cex.axis = cex.axis)
 	axis(side = 2,
 		at = ys,
 		label = ys.lab,
-		cex.axis = cex.axis
-		)	
-
+		cex.axis = cex.axis)	
 
 ```
 
 
-# Figures 2 and 3 
+# Figures 2
 
 ```{r fig 2 and 3, echo=FALSE, message=FALSE, warning=FALSE}
-# Figures 2 and 3 and Appendix Figure A3-A12
+# Figure 2 
 
 # Removed parts of this code by trial and error because I originally got several different 
 # graphs in addition to the ones created in the paper.
-# Not really sure how to separate the figures into different code chunks. 
+# Not really sure how to separate the figures into different code chunks.
+# EDIT: getting rid of for loop makes plots separable
+treat <- read_csv('dataverse_files/white.match.nondemolished.csv')
+diffs <- read_csv('dataverse_files/white.match.nondemolished.diffs.csv')
 
-for(figure in c('white.demo.main','blackmain')){
-	if(figure == 'white.demo.main'){
-		treat = read.csv('dataverse_files/white.match.nondemolished.csv')
-		diffs = read.csv('dataverse_files/white.match.nondemolished.diffs.csv')
-		fig.nums = c('2','A5')
-		pchs = c(17,22)
-		}
-	if(figure == 'blackmain'){
-		treat = read.csv('dataverse_files/white.match.black.property.csv')
-		diffs = read.csv('dataverse_files/white.match.black.diffs.property.csv')
-		fig.nums = c('3','A12')
-		pchs = c(17,21)			
-	}
-  
 			use.ylims = ylims
 			use.ys.lab = ys.lab
 			use.ys = ys
@@ -211,87 +192,170 @@ for(figure in c('white.demo.main','blackmain')){
 			text(xs,use.treat,
 			     paste('(',use.N.treat,')',sep = ''),
 			     cex = cex.N,
-			     pos = 3
-			  )
+			     pos = 3)
 			axis(side = 1,
 					at = xs,
 					label = seq(100,1000,100),
-					cex.axis = cex.axis
-					)
+					cex.axis = cex.axis)
 			axis(side = 2,
 					at = use.ys,
 					label = use.ys.lab,
-					cex.axis = cex.axis
-					)
-		}
+					cex.axis = cex.axis)
 	
 ```
 
 
 
+# Figure 3
+
+```{r fig3, echo=FALSE, message=FALSE, warning=FALSE}
+treat3 <- read_csv('dataverse_files/white.match.black.property.csv')
+diffs3 <- read_csv('dataverse_files/white.match.black.diffs.property.csv')
+
+use.ylims = ylims
+			use.ys.lab = ys.lab
+			use.ys = ys
+	
+			use.treat = treat3$coefficient			
+			clower = use.treat-(1.96*treat3$stdev)
+			cupper = use.treat+(1.96*treat3$stdev)
+			use.N.treat = treat3$N.treatment + treat3$N.control
+						
+			par(las = 1)
+			par(mar = c(5.1, 4.1, .5, .5))
+			plot(xs, use.treat,
+				ylim = use.ylims,
+				xlim = xlims,
+				type = 'n',
+				ylab = 'Treatment Effect',
+				xlab = 'Treated Group Distance from Projects',
+				xaxt = 'n',
+				yaxt = 'n')
+			abline(h = 0, lty = 2)
+				
+			segments(x0=xs,x1=xs,
+						y0= use.treat+line.offset,y1=cupper)
+			segments(x0=xs,x1=xs,
+						y0= use.treat,y1=clower)
+	
+# Treatment Effects.
+# Not totally sure what all of this does. 
+			
+			points(xs, use.treat, 
+				pch = 17, 
+				cex = point.size,
+					bg = 'white',
+       			col = 'black')
+			text(xs,use.treat,
+			     paste('(',use.N.treat,')',sep = ''),
+			     cex = cex.N,
+			     pos = 3)
+			axis(side = 1,
+					at = xs,
+					label = seq(100,1000,100),
+					cex.axis = cex.axis)
+			axis(side = 2,
+					at = use.ys,
+					label = use.ys.lab,
+					cex.axis = cex.axis)
+
+```
+
+
 # Figure 4
 
-```{r fig4, echo=FALSE, message=FALSE, warning=FALSE}
-# Figure 4
+```{r fig4a, echo=FALSE, message=FALSE, warning=FALSE}
+# Figure 4a
 
-distdat =  read.csv('dataverse_files/predicted.results.distance.vary.context.csv')
-areadat = read.csv('dataverse_files/predicted.results.area.vary.context.csv')
+distdat = read.csv('dataverse_files/predicted.results.distance.vary.context.csv')
+colnames(distdat) <- c("mean","sd","50%","2.5%","97.5%")
+
 
 # New ylims for these graphs
-
 ylims.predict = c(.6,.75)
 
-# Put data in a list to cycle through.
+# Parameters to be used in graphs.
+xsa = seq(from = 10, to = 2000, by = 10)
 
-datas = list(distdat,areadat) 
 
-# Parameters to be used in graphs below.
-
-xs = list(seq(from = 10, to = 2000, by = 10), seq(from = 45000, to = 1004000, by = 4800)/1000)
-use.letters = c('a','b')
-xlabs = c('Distance from Project','Percent of Local Black Population in Demolished Project')
-ylabs = c(expression(Pr(vote[2004])),'')
-vlines = list(seq(from = 0, to = 2000, by = 200),seq(from = 0, to = 1000, by = 100))
-axis.labs = list(as.character(seq(from = 0, to = 2000, by = 200)),
-	as.character(c('0','10%','20%','30%','40%','50%','60%','70%','80%','90%','100%')))
-
-for(i in 1:2){
-# Saving renames columns, so name back
-	colnames(datas[[i]]) = c("mean","sd","50%","2.5%","97.5%") 
 		par(las = 1)
-		par(mar = c(5.1, 4.1, .5, .5))
-		plot(xs[[i]],datas[[i]][,'mean'],
+		par(mar = c(5.1, 4.1, .5, .5), mai = c(1.22,0.82,0.82,0.1))
+		plot(xsa, distdat[,'mean'],
 			type = 'l',
-			xlab = xlabs[i],
-			ylab = ylabs[i],
+			xlab = 'Distance from Project',
+			ylab = expression(Pr(vote[2004])),
 			ylim = ylims.predict,
 			xaxt = 'n',
 			cex.axis = cex.axis,
-			lwd = 4
-		)
+			lwd = 4)
+		
+# Put horizontal and vertical lines on plots.
+	abline(h = seq(from = min(ylims.predict), to = max(ylims.predict), by = .025),
+	       lty = 2,
+	       col = 'gray',
+	       lwd = 1)
+	abline(v = seq(from = 0, to = 2000, by = 200), 
+	       lty = 2,
+	       col = 'gray',
+	       lwd = 1)
+	lines(xsa, distdat[,'2.5%'],
+			lty = 3,
+			lwd = 2.5)
+	lines(xsa, distdat[,'97.5%'],
+			lty = 3,
+			lwd = 2.5)
+
+axis(side = 1, 
+		at = seq(from = 0, to = 2000, by = 200),
+     labels = as.character(seq(from = 0, to = 2000, by = 200)),
+		cex.axis = cex.axis)
+```
+
+
+```{r fig4b, echo=FALSE, message=FALSE, warning=FALSE}
+# Figure 4b
+areadat = read.csv('dataverse_files/predicted.results.area.vary.context.csv')
+colnames(areadat) <- c("mean","sd","50%","2.5%","97.5%")
+
+# Parameters.
+xsb = seq(from = 45000, to = 1004000, by = 4800)/1000
+
+	par(las = 1)
+		par(mar = c(5.1, 4.1, .5, .5), mai = c(1.22,0.82,0.82,0.1))
+		plot(xsb, areadat[,'mean'],
+			type = 'l',
+			xlab = 'Percent of Local Black Population in Demolished Project',
+			ylab = expression(Pr(vote[2004])),
+			ylim = ylims.predict,
+			xaxt = 'n',
+			cex.axis = cex.axis,
+			lwd = 4)
 		
 # Put horizontal and vertical lines on plots
 	abline(h = seq(from = min(ylims.predict), to = max(ylims.predict), by = .025),
 	       lty = 2,
 	       col = 'gray',
 	       lwd = 1)
-	abline(v = vlines[[i]], 
+	abline(v = seq(from = 0, to = 2000, by = 200), 
 	       lty = 2,
 	       col = 'gray',
 	       lwd = 1)
-	lines(xs[[i]],datas[[i]][,'2.5%'],
+	lines(xsb, areadat[,'2.5%'],
 			lty = 3,
 			lwd = 2.5)
-	lines(xs[[i]],datas[[i]][,'97.5%'],
+	lines(xsb, areadat[,'97.5%'],
 			lty = 3,
 			lwd = 2.5)
-	axis(side = 1, 
-		at = vlines[[i]], 
-		labels = axis.labs[[i]],
+	
+
+  axis(side = 1, 
+		at = seq(from = 0, to = 1000, by = 100),
+		# Hard coding axis labels. Help from Enxhis code from class.
+     labels = as.character(c('0','10%','20%','30%','40%','50%','60%','70%','80%','90%','100%')),
 		cex.axis = cex.axis)
-}
 
 ```
+
 
 # Figures 5 and 6
 
